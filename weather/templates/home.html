@@ -1,33 +1,39 @@
 {% extends "main.html" %}
 
-{% block verse %}
+{% block verse%}
 {{ verse }}
 {% endblock %}
 
 {% block content %}
+    <h1>Climate Data</h1>
 
-<h1>Temperaturas</h1>
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
 
-<div class="d-flex justify-content-start flex-wrap">
+    <div class="d-flex justify-content-start flex-wrap">
 
-    {% for weather in weathers %}
-    <div class="col-md-4 p-2">
-        <div class="card">
+        {% for weather in weathers %}
+        <div class="col-md-4 p-2">
+          <div class="card">
             <div class="card-header">
-                Temperatura: {{ weather.temperature }}°C
+                Temperature: {{ weather.temperature }}
             </div>
             <div class="card-body">
                 <p class="card-text">
-                    Data: {{ weather.date }} <br />
-                    Cidade: {{ weather.city }} <br />
-                    Umidade: {{ weather.humidity }}% <br />
-                    Pressão Atmosférica: {{ weather.atmosphericPressure }} hPa <br />
-                    Condição do Tempo: {{ weather.weather }}
+                    Date: {{ weather.date }} <br />
+                    City: {{ weather.city }} <br />
+                    Atmospheric Pressure: {{ weather.atmosphericPressure }} <br />
+                    Humidity: {{ weather.humidity }} <br />
+                    Weather: {{ weather.weather }}
                 </p>
             </div>
+          </div>
         </div>
-    </div>
-    {% endfor %}
 
-</div>
+        {% endfor %}
+
+    </div>
 {% endblock content %}
