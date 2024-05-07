@@ -13,11 +13,11 @@
 
 {% block content %}
 
-    <h1>Insert Climate Data</h1>
+    <h1>Edit Climate Data</h1>
 
     <div class="d-flex justify-content-start flex-wrap">
 
-        <form action="{% url 'Weather Insert' %}" method="post" enctype="multipart/form-data">
+        <form action="{% url 'Weather Edit' id %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-md-12 p-2">
                 <div class="card">

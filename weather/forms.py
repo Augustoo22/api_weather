@@ -11,3 +11,6 @@ class WeatherForm(forms.Form):
     atmosphericPressure = forms.FloatField(required=False)
     humidity = forms.FloatField(required=False)
     weather = forms.CharField(max_length=255, required=False)
+
+    # def __init__(self, *args, **kwargs):
+    #     self.fields['temperature'].label = 'Temperatura'

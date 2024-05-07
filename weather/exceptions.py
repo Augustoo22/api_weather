@@ -1,3 +1,4 @@
+
 class WeatherException(Exception):
 
     def __init__(self, message) -> None:

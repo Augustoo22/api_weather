@@ -1,15 +1,38 @@
 {% extends "main.html" %}
 
+{% block menu %}
+{% if not errorAuth %}
+<li class="nav-item"><a href="{% url 'Weather Insert' %}" class="nav-link">Insert</a></li>
+<li class="nav-item"><a href="{% url 'Weather Generate' %}" class="nav-link">Generate</a></li>
+<li class="nav-item"><a href="{% url 'Weather Reset' %}" class="nav-link">Reset</a></li>
+<li class="nav-item"><a href="#" class="nav-link">Logout</a></li>
+{% else %}
+<li class="nav-item"><a href="#" class="nav-link">Register</a></li>
+<li class="nav-item"><a href="#" class="nav-link">Login</a></li>
+{% endif %}
+{% endblock %}
+
 {% block verse%}
 {{ verse }}
 {% endblock %}
 
 {% block content %}
-    <h1>Climate Data</h1>
 
-    {% if error %}
+    <div class="d-flex justify-content-between">
+        <h1>Climate Data</h1>
+        <div>
+            <form action="{% url 'Weather Filter' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label>City</label>
+                <input type="text" id="city" name="city" />
+                <input type="submit" value="Filter" />
+            </form>
+        </div>
+    </div>
+
+    {% if error or errorAuth %}
     <div class="alert alert-danger" role="alert">
-        {{ error }}
+        {{ error }}{{ errorAuth }}
     </div>
     {% endif %}
 
@@ -19,7 +42,19 @@
         <div class="col-md-4 p-2">
           <div class="card">
             <div class="card-header">
-                Temperature: {{ weather.temperature }}
+                <div class="d-flex justify-content-between">
+                    <div>
+                        Temperature: {{ weather.temperature }}
+                    </div>
+                    <div>
+                        {% if not errorAuth %}
+                        <a href="{% url 'Weather Edit' weather.id %}" class="link-dark link-offset-2 link-underline-opacity-0">
+                            <i class="bi bi-pencil-square"></i></a>
+                        <a href="{% url 'Weather Delete' weather.id %}" class="link-dark link-offset-2 link-underline-opacity-0">
+                            <i class="bi bi-trash-fill"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <p class="card-text">

@@ -1,22 +1,23 @@
-import pymongo 
+import pymongo
 from pymongo.errors import ConnectionFailure
+from bson import ObjectId
 from django.conf import settings
-from .exceptions import WeatherExceptions
+from .exceptions import WeatherException
 
-class WheaterRepository:
+class WeatherRepository:
 
     collection = ''
 
-    def __init__(self) -> None:
-        self.collection  = collectionName
-    
+    def __init__(self, collectionName) -> None:
+        self.collection = collectionName
+
     def getConnection(self):
         try:
             client = pymongo.MongoClient(
                 getattr(settings, "MONGO_CONNECTION_STRING")
             )
         except ConnectionFailure as e :
-            raise WeatherExceptions(f"Error connecting to database: {e}")
+            raise WeatherException(f"Error connecting to database: {e}")
         
         connection = client[
             getattr(settings, "MONGO_DATABASE_NAME")]
@@ -28,11 +29,38 @@ class WheaterRepository:
         return collection
     
     def getAll(self):
-        document = self.getCollection().find({})
-        return document
-
-    def insert(self, document):
-        self.getCollection().insert_one(document)
+        documents = []
+        for document in self.getCollection().find({}):
+            id = document.pop('_id')
+            document['id'] = str(id)
+            documents.append(document)
+        return documents
     
+    def get(self, filter):
+        documents = []
+        for document in self.getCollection().find(filter):
+            id = document.pop('_id')
+            document['id'] = str(id)
+            documents.append(document)
+        return documents
+    
+    def getByID(self, id):
+        document = self.getCollection().find_one({"_id": ObjectId(id)})
+        id = document.pop('_id')
+        document['id'] = str(id)
+        return document
+    
+    def insert(self, document):
+        document.pop('id')
+        self.getCollection().insert_one(document)
+
+    def update(self, document, id):
+        self.getCollection().update_one({"_id": ObjectId(id)}, 
+                                       {"$set": document})
+
     def deleteAll(self):
         self.getCollection().delete_many({})
+
+    def deleteByID(self, id):
+        ret = self.getCollection().delete_one({"_id": ObjectId(id)})
+        return ret.deleted_count
