@@ -10,5 +10,8 @@ urlpatterns = [
     path('delete/<id>/', WeatherDelete.as_view(), name='Weather Delete'),
     path('generate', WeatherGenerate.as_view(), name='Weather Generate'),
     path('reset', WeatherReset.as_view(), name='Weather Reset'),
-    path('token', UserTokenizer.as_view(), name='User Token')
+    path('token', UserTokenizer.as_view(), name='User Token'),
+     path('user/register/', UserRegister.as_view(), name='User Register'), 
+    # path('user/edit/<id>/', UserEdit.as_view(), name='User Edit'),  
+    # path('user/delete/<id>/', UserDelete.as_view(), name='User Delete'),
 ]
